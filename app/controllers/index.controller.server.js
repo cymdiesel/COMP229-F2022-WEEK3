@@ -1,5 +1,5 @@
 export function helloWorld(req, res, next){
-    res.render('index.ejs');
+    res.render('index');
 };
 
 export function goodbyeWorld(req, res, next){

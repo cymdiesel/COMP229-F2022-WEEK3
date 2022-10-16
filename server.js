@@ -3,6 +3,7 @@ import express from 'express';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import bootstrap from 'bootstrap'
 
 // ES Modules for __dirname fix
 import path, {dirname} from 'path';
@@ -31,6 +32,7 @@ app.use(session({
     saveUninitialized: false,
     resave: false
 }));
+app.use(bootstrap());
 
 // Use Routes
 app.use('/', indexRouter);
