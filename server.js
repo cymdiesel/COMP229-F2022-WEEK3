@@ -3,7 +3,10 @@ import express from 'express';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import bootstrap from 'bootstrap'
+//import bootstrap from 'bootstrap'
+
+// Import from Font Awesome 
+
 
 // ES Modules for __dirname fix
 import path, {dirname} from 'path';
@@ -26,13 +29,14 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname,'/client')));
+//app.use(express.static(path.join(__dirname,'/client')));
+app.use(express.static(path.join(__dirname,'/public')));
 app.use(session({
     secret: 'MySecret',
     saveUninitialized: false,
     resave: false
 }));
-app.use(bootstrap());
+//app.use(bootstrap());
 
 // Use Routes
 app.use('/', indexRouter);
