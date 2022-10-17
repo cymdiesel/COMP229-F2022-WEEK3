@@ -1,47 +1,61 @@
-// Third-Party Modules
-import express from 'express';
-import logger from 'morgan';
-import cookieParser from 'cookie-parser';
-import session from 'express-session';
-//import bootstrap from 'bootstrap'
+import debug from 'debug';
+debug('comp-229');
+import http from 'http'; 
+import { normalize } from 'path';
 
-// Import from Font Awesome 
+import app from './app/app.js';
+
+const PORT = normalizePort(process.env.PORT || 3000);
+app.set('port', PORT);
+
+const server = http.createServer(app);
+
+server.listen(PORT);
+server.on('error', onError);
+server.on('listening', onListening);
 
 
-// ES Modules for __dirname fix
-import path, {dirname} from 'path';
-import { fileURLToPath } from 'url';
-const __dirname = dirname(fileURLToPath(import.meta.url));
+function normalizePort(val){
+    var port = parseInt(val, 10);
 
-// Import Configuration Module 
-import { Secret } from './config/config.js';
+    if(isNaN(port)){
+        return val;
+    }
 
-// Import Routes
-import indexRouter from './app/routes/index.route.server.js';
+    if(port >= 0){
+        return port;
+    }
 
-// Instantiate Express Application
-const app = express();
+    return false;
+};
 
-// Set up Middlewares
+function onError(error){
+    if(error.syscall !== 'listen'){
+        throw error;
+    }
 
-    // Setup ViewEngine EJS
-app.set('views', path.join(__dirname, '/app/views'));
-app.set('view engine', 'ejs');
+    let bind = typeof port === 'string'
+        ? 'Pipe' + port
+        : 'Port' + port;
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({extended: false}));
-app.use(cookieParser());
-//app.use(express.static(path.join(__dirname,'/client')));
-app.use(express.static(path.join(__dirname,'/public')));
-app.use(session({
-    secret: Secret,
-    saveUninitialized: false,
-    resave: false
-}));
-//app.use(bootstrap());
+    // Switch to handle specific listen erros with friendly messages 
+    switch (error.code){
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind = ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
 
-// Use Routes
-app.use('/', indexRouter);
+};
 
-app.listen(3000);
+function onListening(){
+    let addr = server.address();
+    let bind = 'pipe' + addr;
+    debug('Listening on '+ bind);
+}
